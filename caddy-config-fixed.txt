@@ -1,0 +1,31 @@
+# Corrected Caddy configuration for qr.developer-pro.com
+
+qr.developer-pro.com {
+    root * /var/www/qr.developer-pro.com
+    encode gzip
+    file_server
+    
+    # Handle static files with proper MIME types
+    @static_files {
+        path *.js *.css *.png *.jpg *.jpeg *.gif *.svg *.ico *.woff *.woff2 *.ttf *.otf *.json
+    }
+    handle @static_files {
+        file_server
+    }
+    
+    # Handle PWA specific files
+    @pwa_files {
+        path /manifest.json /sw.js /icon-192.png /icon-512.png
+    }
+    handle @pwa_files {
+        file_server
+    }
+    
+    # All other requests go to index.html for SPA routing
+    @spa {
+        path /*
+        not path *.js *.css *.png *.jpg *.jpeg *.gif *.svg *.ico *.woff *.woff2 *.ttf *.otf *.json
+        not path /manifest.json /sw.js /icon-192.png /icon-512.png
+    }
+    rewrite @spa /index.html
+}

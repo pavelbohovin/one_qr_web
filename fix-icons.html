@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fix PWA Icons</title>
+</head>
+<body>
+    <h1>Generate Proper PWA Icons</h1>
+    <p>This will create working PNG icons for your PWA.</p>
+    
+    <canvas id="canvas192" width="192" height="192" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+    <canvas id="canvas512" width="512" height="512" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+    
+    <div id="downloads"></div>
+    
+    <script>
+        function createIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw QR-like pattern
+            ctx.fillStyle = 'white';
+            const iconSize = size * 0.6;
+            const iconX = (size - iconSize) / 2;
+            const iconY = (size - iconSize) / 2;
+            
+            // Draw corner squares (QR code style)
+            const blockSize = iconSize / 8;
+            
+            // Top-left corner
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if ((i === 0 || i === 2) && (j === 0 || j === 2)) {
+                        ctx.fillRect(iconX + i * blockSize, iconY + j * blockSize, blockSize, blockSize);
+                    }
+                }
+            }
+            
+            // Top-right corner
+            for (let i = 5; i < 8; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if ((i === 5 || i === 7) && (j === 0 || j === 2)) {
+                        ctx.fillRect(iconX + i * blockSize, iconY + j * blockSize, blockSize, blockSize);
+                    }
+                }
+            }
+            
+            // Bottom-left corner
+            for (let i = 0; i < 3; i++) {
+                for (let j = 5; j < 8; j++) {
+                    if ((i === 0 || i === 2) && (j === 5 || j === 7)) {
+                        ctx.fillRect(iconX + i * blockSize, iconY + j * blockSize, blockSize, blockSize);
+                    }
+                }
+            }
+            
+            // Center pattern
+            for (let i = 3; i < 5; i++) {
+                for (let j = 3; j < 5; j++) {
+                    ctx.fillRect(iconX + i * blockSize, iconY + j * blockSize, blockSize, blockSize);
+                }
+            }
+            
+            // Create download link
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `icon-${size}.png`;
+                link.textContent = `Download icon-${size}.png`;
+                link.style.display = 'block';
+                link.style.margin = '10px 0';
+                link.style.padding = '10px';
+                link.style.backgroundColor = '#2563eb';
+                link.style.color = 'white';
+                link.style.textDecoration = 'none';
+                link.style.borderRadius = '5px';
+                link.style.textAlign = 'center';
+                link.style.width = '200px';
+                
+                document.getElementById('downloads').appendChild(link);
+            }, 'image/png');
+        }
+        
+        // Create both icons
+        createIcon('canvas192', 192);
+        createIcon('canvas512', 512);
+    </script>
+</body>
+</html>
