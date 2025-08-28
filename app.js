@@ -5,8 +5,7 @@ class OneQRApp {
         this.displayImage = document.getElementById('displayImage');
         this.placeholder = document.getElementById('placeholder');
         this.fileInput = document.getElementById('fileInput');
-        this.selectButton = document.getElementById('selectButton');
-        this.clearButton = document.getElementById('clearButton');
+        this.binIcon = document.getElementById('binIcon');
         
         this.init();
     }
@@ -18,15 +17,15 @@ class OneQRApp {
     }
     
     bindEvents() {
-        // File selection
-        this.selectButton.addEventListener('click', () => this.fileInput.click());
+        // File selection - click anywhere on the container
+        this.imageContainer.addEventListener('click', () => this.fileInput.click());
         this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
         
-        // Image container click
-        this.imageContainer.addEventListener('click', () => this.fileInput.click());
-        
-        // Clear image
-        this.clearButton.addEventListener('click', () => this.clearImage());
+        // Bin icon click
+        this.binIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering image container click
+            this.clearImage();
+        });
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
@@ -121,7 +120,7 @@ class OneQRApp {
         this.displayImage.src = imageData;
         this.displayImage.style.display = 'block';
         this.placeholder.style.display = 'none';
-        this.clearButton.style.display = 'block';
+        this.binIcon.style.display = 'flex';
         
         // Preload image for faster display
         this.displayImage.onload = () => {
@@ -135,7 +134,7 @@ class OneQRApp {
         localStorage.removeItem(this.storageKey);
         this.displayImage.style.display = 'none';
         this.placeholder.style.display = 'block';
-        this.clearButton.style.display = 'none';
+        this.binIcon.style.display = 'none';
         this.fileInput.value = '';
         this.imageContainer.classList.remove('loading');
     }
