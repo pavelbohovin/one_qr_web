@@ -6,6 +6,7 @@ class OneQRApp {
         this.placeholder = document.getElementById('placeholder');
         this.fileInput = document.getElementById('fileInput');
         this.binIcon = document.getElementById('binIcon');
+        this.tapIcon = document.getElementById('tapIcon');
         
         this.init();
     }
@@ -17,14 +18,24 @@ class OneQRApp {
     }
     
     bindEvents() {
-        // File selection - click anywhere on the container
-        this.imageContainer.addEventListener('click', () => this.fileInput.click());
+        // File selection - click anywhere on the container (only when no image)
+        this.imageContainer.addEventListener('click', () => {
+            if (this.displayImage.style.display === 'none') {
+                this.fileInput.click();
+            }
+        });
         this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
         
         // Bin icon click
         this.binIcon.addEventListener('click', (e) => {
             e.stopPropagation(); // Prevent triggering image container click
             this.clearImage();
+        });
+        
+        // Tap icon click
+        this.tapIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering image container click
+            this.fileInput.click();
         });
         
         // Keyboard shortcuts
@@ -121,6 +132,7 @@ class OneQRApp {
         this.displayImage.style.display = 'block';
         this.placeholder.style.display = 'none';
         this.binIcon.style.display = 'flex';
+        this.tapIcon.style.display = 'flex';
         
         // Preload image for faster display
         this.displayImage.onload = () => {
@@ -135,6 +147,7 @@ class OneQRApp {
         this.displayImage.style.display = 'none';
         this.placeholder.style.display = 'block';
         this.binIcon.style.display = 'none';
+        this.tapIcon.style.display = 'none';
         this.fileInput.value = '';
         this.imageContainer.classList.remove('loading');
     }
