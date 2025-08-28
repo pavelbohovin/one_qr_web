@@ -1,0 +1,32 @@
+# Add this block to your Caddyfile for the One QR PWA subdomain
+
+qr.developer-pro.com {
+    root * /var/www/qr.developer-pro.com
+    encode gzip
+    file_server
+    try_files {path} {path}/ /index.html
+    
+    # Handle PWA manifest and service worker
+    @pwa_files {
+        path /manifest.json /sw.js /icon-192.png /icon-512.png
+    }
+    handle @pwa_files {
+        file_server
+    }
+    
+    # Handle static assets
+    @static_assets {
+        path_regexp static ^/(images|fonts|js|css|media)/.*\.(gif|png|jpg|jpeg|webp|svg|ico|woff2?|ttf|otf|eot|glb|json|js|css)$
+    }
+    handle @static_assets {
+        file_server
+    }
+    
+    # All other requests go to index.html for SPA routing
+    @spa {
+        path /*
+        not path_regexp static ^/(images|fonts|js|css|media)/.*\.(gif|png|jpg|jpeg|webp|svg|ico|woff2?|ttf|otf|eot|glb|json|js|css)$
+        not path /manifest.json /sw.js /icon-192.png /icon-512.png
+    }
+    rewrite @spa /index.html
+}

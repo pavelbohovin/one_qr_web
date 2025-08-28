@@ -1,0 +1,29 @@
+{
+  "name": "one-qr-pwa",
+  "version": "1.0.0",
+  "description": "A simple, fast Progressive Web App for displaying one image from localStorage",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 server.py",
+    "dev": "python3 server.py",
+    "serve": "python3 server.py"
+  },
+  "keywords": [
+    "pwa",
+    "qr-code",
+    "image-display",
+    "localstorage",
+    "offline",
+    "progressive-web-app"
+  ],
+  "author": "One QR Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/one-qr-pwa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/one-qr-pwa/issues"
+  },
+  "homepage": "https://github.com/yourusername/one-qr-pwa#readme"
+}

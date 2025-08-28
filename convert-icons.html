@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Convert Icons</title>
+</head>
+<body>
+    <h1>Convert SVG Icons to PNG</h1>
+    <p>This will convert the SVG icons to PNG format for the PWA.</p>
+    
+    <div id="icons"></div>
+    
+    <script>
+        async function convertSvgToPng(svgContent, size, filename) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            const img = new Image();
+            const blob = new Blob([svgContent], {type: 'image/svg+xml'});
+            const url = URL.createObjectURL(blob);
+            
+            return new Promise((resolve) => {
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    canvas.toBlob((blob) => {
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = downloadUrl;
+                        link.download = filename;
+                        link.textContent = `Download ${filename}`;
+                        link.style.display = 'block';
+                        link.style.margin = '10px 0';
+                        link.style.padding = '10px';
+                        link.style.backgroundColor = '#2563eb';
+                        link.style.color = 'white';
+                        link.style.textDecoration = 'none';
+                        link.style.borderRadius = '5px';
+                        link.style.textAlign = 'center';
+                        
+                        document.getElementById('icons').appendChild(link);
+                        resolve();
+                    });
+                };
+                img.src = url;
+            });
+        }
+        
+        async function loadAndConvert() {
+            try {
+                const response192 = await fetch('icon-192.svg');
+                const svg192 = await response192.text();
+                await convertSvgToPng(svg192, 192, 'icon-192.png');
+                
+                const response512 = await fetch('icon-512.svg');
+                const svg512 = await response512.text();
+                await convertSvgToPng(svg512, 512, 'icon-512.png');
+                
+                console.log('Icons converted successfully!');
+            } catch (error) {
+                console.error('Error converting icons:', error);
+                document.body.innerHTML += '<p style="color: red;">Error: Make sure the SVG files are available and the page is served from a web server.</p>';
+            }
+        }
+        
+        // Convert icons when page loads
+        loadAndConvert();
+    </script>
+</body>
+</html>
+
